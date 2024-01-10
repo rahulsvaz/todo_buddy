@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_buddy/model/todo_model.dart';
+import 'package:to_do_buddy/viewModel/todo_provider.dart';
 
 class AddTodoScreen extends StatefulWidget {
   const AddTodoScreen({super.key});
@@ -16,6 +18,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final todoProvider = Provider.of<TodoProvider>(context);
     return Scaffold(
       body: Center(
         child: Padding(
@@ -39,16 +42,10 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    TodoModel newTodo = TodoModel(
-                        tittle: tittleController.text,
-                        todo: todoController.text,
-                        isCompleted: false);
-                    if (tittleController.text.isNotEmpty ||
-                        todoController.text.isNotEmpty) {
-                      todoBox
-                          .add(newTodo)
-                          .then((value) => print(newTodo.tittle));
-                    }
+                    final tittle = tittleController.text;
+                    final todo =todoController.text;
+
+                   todoProvider.addTodo(tittle, todo, false);
                   },
                   child: const Text('Save'))
             ],
